@@ -1,6 +1,9 @@
-package ccd;
+package main;
 
 import (
+  "os"
+  "fmt"
+  "io/ioutil"
   "encoding/xml"
 )
 
@@ -211,8 +214,5 @@ type TableData struct {
 	
 }
 type Entry struct {
-
-}
-type PatientRole {
 
 }
