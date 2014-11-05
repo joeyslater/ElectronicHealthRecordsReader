@@ -211,7 +211,7 @@ type TableRow struct {
 }
 
 type TableData struct {
-	
+	Text string ",chardata"
 }
 type Entry struct {
 
