@@ -1,6 +1,6 @@
-<div id="login" ng-controller="LoginCtrl" class="well container center-block shadow">
+<div id="login" ng-controller="LoginController" class="well container center-block shadow">
     <h1 class="text-center">Medical Guru</h1>
-    <form ng-submit="login()" class="form-horizontal center-block row" role="form">
+    <form ng-submit="login(credentials)" class="form-horizontal center-block row" role="form">
         <div ng-class="{'has-error': username-error}" class="col-sm-12">
             <input ng-model="name" type="text" class="form-control" id="username" placeholder="Username">
         </div>

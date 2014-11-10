@@ -1,8 +1,30 @@
-application: medicalguru
+application: zippy-aurora-729
 version: 1
 runtime: go
 api_version: go1
 
 handlers:
-- url: /.*
+- url: /vendor
+  static_dir: gui/target/vendor
+
+- url: /assets
+  static_dir: gui/target/assets
+
+- url: /src
+  static_dir: gui/target/src
+
+- url: /index.html
+  static_files: gui/target/index.html
+  upload: gui/target/index.html
+
+- url: /
+  static_files: gui/target/index.html
+  upload: gui/target/index.html
+
+- url: /(.*\.js)
+  mime_type: text/javascript
+  static_files: gui/target/\1
+  upload: gui/target/(.*\.js)
+
+- url: .*
   script: _go_app
