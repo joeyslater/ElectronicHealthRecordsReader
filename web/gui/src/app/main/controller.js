@@ -1,9 +1,9 @@
 angular.module('medical-guru.main', [
-    'medical-guru'
+	'medical-guru'
 ])
 
-.controller('MainCtrl', function($location, Auth) {
-    // if (!Auth.isLoggedIn()) {
-    //     $location.path('/login');
-    // }
+.controller('MainCtrl', function($location, AuthService) {
+	// if (!Auth.isLoggedIn()) {
+	//     $location.path('/login');
+	// }
 });

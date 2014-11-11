@@ -1,90 +1,79 @@
 //Register Module
 angular.module('medical-guru.main.register', [
     'ngResource',
-    'medical-guru'
+    'medical-guru',
+    'medical-guru.auth'
 ])
 
 //Service for registering users
-.factory('RegisterUserService', ["$http", function($http) {
+.factory('RegisterService', ["$http", function($http) {
     return {
-        addNewUser: function(user) {
-            return $http.post('/user', {
-                name: user.name,
-                password: user.password
+        registerUser: function(credentials) {
+            return $http.post('/register', {
+                username: credentials.username,
+                password: credentials.password,
+                firstName: credentials.firstName,
+                lastName: credentials.lastName
             });
         }
     };
 }])
 
 //Controller for registering user
-.controller('RegisterCtrl', function($log, $scope, RegisterUserService, $http, Auth, $location) {
+.controller('RegisterController', function($log, $scope, RegisterService, $http, AuthService, $location) {
+
     //Set defaults 
-    $scope.user = {};
-    $scope.confirmPasswordError = false;
-    $scope.duplicateUserError = false;
+    $scope.credentials = {
+        firstName: '',
+        lastName: '',
+        username: '',
+        password: ''
+    };
+
+    $scope.errors = [];
+
 
     //checks to see if passwrod is matched with confirm password
     $scope.checkPasswords = function() {
-        if ($scope.confirmPassword !== $scope.password) {
+        if ($scope.credentials.confirmPassword !== $scope.credentials.password) {
             $scope.confirmPasswordError = true;
+            $scope.errors.length = 0;
+            $scope.errors.push(
+                "Password are not equal"
+            );
         } else {
             $scope.confirmPasswordError = false;
         }
+        return !$scope.confirmPasswordError;
     };
 
     //method for adding user
-    $scope.addUser = function() {
-        //ensures that no field is empty and password matches confirmed password
-        if (!($scope.name)) {
-            //Emtpy task name
-            $scope.needUserNameError = true;
-            $scope.needPasswordError = false;
-            $scope.needConfirmPasswordError = false;
-            $scope.confirmPasswordError = false;
-            $scope.duplicateUserError = false;
-        } else if (!($scope.password)) {
-            //Empty password field
-            $scope.needUserNameError = false;
-            $scope.needPasswordError = true;
-            $scope.needConfirmPasswordError = false;
-            $scope.confirmPasswordError = false;
-            $scope.duplicateUserError = false;
-        } else if (!($scope.confirmPassword)) {
-            //Empty confirmed password field
-            $scope.needUserNameError = false;
-            $scope.needPasswordError = false;
-            $scope.needConfirmPasswordError = true;
-            $scope.confirmPasswordError = false;
-            $scope.duplicateUserError = false;
-        } else if ($scope.password !== $scope.confirmPassword) {
-            //password and confirmed password do not math
-            $scope.needUserNameError = false;
-            $scope.needPasswordError = false;
-            $scope.needConfirmPasswordError = false;
-            $scope.confirmPasswordError = true;
-            $scope.duplicateUserError = false;
-        } else {
-            //succeeds and can attempt to add user
-            $scope.user.name = $scope.name;
-            $scope.user.password = $scope.password;
-            RegisterUserService.addNewUser($scope.user)
-                .success(function(data) {
-                    $scope.user.name = data.name;
-                    $scope.user.password = data.password;
-                    $scope.user.id = data.id;
-                    $scope.user.optionShowCheckedItems = true;
-                    Auth.setLoggedInUser($scope.user);
-                    $location.path('/');
-                })
-                .error(function(data, status, headers, config) {
-                    if (status === 409) {
-                        $scope.needUserNameError = false;
-                        $scope.needPasswordError = false;
-                        $scope.needConfirmPasswordError = false;
-                        $scope.confirmPasswordError = false;
-                        $scope.duplicateUserError = true;
-                    }
-                });
-        }
+    $scope.register = function() {
+
+        //succeeds and can attempt to add user
+        $scope.user.name = $scope.name;
+        $scope.user.password = $scope.password;
+        RegisterService.registerUser($scope.credentials)
+            .success(function(data) {
+                $scope.user.name = data.name;
+                $scope.user.password = data.password;
+                $scope.user.id = data.id;
+                $scope.user.optionShowCheckedItems = true;
+                Auth.setLoggedInUser($scope.user);
+                $location.path('/');
+            })
+            .error(function(data, status, headers, config) {
+                if (status === 409) {
+                    $scope.needUserNameError = false;
+                    $scope.needPasswordError = false;
+                    $scope.needConfirmPasswordError = false;
+                    $scope.confirmPasswordError = false;
+                    $scope.duplicateUserError = true;
+                }
+            });
     };
-});
+})
+
+//
+
+;

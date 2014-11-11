@@ -6,6 +6,7 @@ angular.module('medical-guru', [
     'ngCookies',
     'templates-app',
     'templates-common',
+    'medical-guru.auth',
     'medical-guru.main',
     'medical-guru.main.login',
     'medical-guru.main.register',
@@ -17,6 +18,16 @@ angular.module('medical-guru', [
     $routeProvider
         .when('/', {
             templateUrl: 'main/main.tpl.html'
+                // resolve: {
+                //     auth: ["$q", "AuthService", function($q, AuthService) {
+                //         if (AuthService.isAuthenticated()) {
+                //             return $q.when(userInfo);
+                //         } else {
+                //             return $q.reject({
+                //                 authenticated: false
+                //             });
+                //         }
+                //     }]
         })
         .when('/register', {
             templateUrl: 'main/register/main.tpl.html'
@@ -29,31 +40,27 @@ angular.module('medical-guru', [
         });
 })
 
-//Authentication Service factory, allows modules to see if user is logged in as well as dealing with the cookie store
-.factory('Auth', function($http, $cookieStore, $log) {
-    var loggedInUser;
-    return {
-        setLoggedInUser: function(user) {
-            $cookieStore.put('user', user.id);
-            loggedInUser = user;
-        },
-        getLoggedInUser: function() {
-            var id = $cookieStore.get('user');
-            return $http.get('/user/id/' + id);
-        },
-        isLoggedIn: function() {
-            if ($cookieStore.get('user') && $cookieStore.get('user') !== 'notloggedin') {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        logout: function() {
-            $cookieStore.put('user', 'notloggedin');
-            loggedInUser = null;
-        }
-    };
-})
+// .run(function($rootScope, AuthEvents, AuthService) {
+//         $rootScope.$on('$stateChangeStart', function(event, next) {
+//                 var authorizedRoles = next.data.authorizedRoles;
+//                 if (!AuthService.isAuthorized(authorizedRoles)) {
+//                     event.preventDefault();
+//                     if (AuthService.isAuthenticated()) {
+//                         $rootScope.$broadcast(AuthEvents.notAuthorized);
+//                     } else {
+//                         $rootScope.$broadcast(AuthEvents.notAuthenticated);
+//                     }
+//                 }
+//             }
+//         })
 
-//Empty Controller
-.controller('AppCtrl', function($log, $scope) {});
+.controller('AppCtrl', function($scope, UserRoles, AuthService) {
+    $scope.currentUser = null;
+    $scope.userRoles = UserRoles;
+    $scope.isAuthorized = AuthService.isAuthorized;
+
+    $scope.setCurrentUser = function(user) {
+        $scope.currentUser = user;
+    };
+
+});

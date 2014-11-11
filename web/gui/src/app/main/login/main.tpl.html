@@ -2,10 +2,10 @@
     <h1 class="text-center">Medical Guru</h1>
     <form ng-submit="login(credentials)" class="form-horizontal center-block row" role="form">
         <div ng-class="{'has-error': username-error}" class="col-sm-12">
-            <input ng-model="name" type="text" class="form-control" id="username" placeholder="Username">
+            <input ng-model="credentials.username" type="text" class="form-control" id="username" placeholder="Username">
         </div>
         <div ng-class="{'has-error': password-error}" class="col-sm-12">
-            <input ng-model="password" type="password" class="form-control" id="password" placeholder="Password">
+            <input ng-model="credentials.password" type="password" class="form-control" id="password" placeholder="Password">
         </div>
         <div ng-show="error" class="col-sm-12">
             <p class="text-danger">Either your username, password, or both are incorrect.</p>

@@ -1,23 +1,22 @@
 //Login module
 angular.module('medical-guru.main.login', [
-    'medical-guru'
+    'medical-guru',
+    'medical-guru.auth'
 ])
 
-//Factory for logging in a user, to get a user from a username
-.factory('LoginFactory', ["$http", function($http) {
-    return {
-        getUserFromName: function(username) {
-            return $http.get('/user/name/' + username);
-        }
-    };
-}])
-
 //Controller for Login
-.controller('LoginController', function($log, $scope, $location, LoginFactory, Auth) {
+.controller('LoginController', function($log, $scope, $rootScope, AuthService, AuthEvents) {
 
     $scope.credentials = {
         username: '',
         password: ''
+    };
+
+    $scope.login = function(credentials) {
+        AuthService.login(credentials).then(function(user) {
+            $rootScope.$broadcast(AuthEvents.loginSuccess);
+            $scope.setCurrentUser(user);
+        });
     };
 
 
