@@ -12,6 +12,7 @@ angular.module('medical-guru.main.register', [
             return $http.post('/register', {
                 username: credentials.username,
                 password: credentials.password,
+                emailAddress: credentials.emailAddress,
                 firstName: credentials.firstName,
                 lastName: credentials.lastName
             });
@@ -26,6 +27,7 @@ angular.module('medical-guru.main.register', [
     $scope.credentials = {
         firstName: '',
         lastName: '',
+        emailAddress: '',
         username: '',
         password: ''
     };
@@ -48,28 +50,25 @@ angular.module('medical-guru.main.register', [
     };
 
     //method for adding user
-    $scope.register = function() {
+    $scope.register = function(credentials) {
 
-        //succeeds and can attempt to add user
-        $scope.user.name = $scope.name;
-        $scope.user.password = $scope.password;
         RegisterService.registerUser($scope.credentials)
             .success(function(data) {
-                $scope.user.name = data.name;
-                $scope.user.password = data.password;
-                $scope.user.id = data.id;
-                $scope.user.optionShowCheckedItems = true;
-                Auth.setLoggedInUser($scope.user);
-                $location.path('/');
+                // $scope.user.name = data.name;
+                // $scope.user.password = data.password;
+                // $scope.user.id = data.id;
+                // $scope.user.optionShowCheckedItems = true;
+                // Auth.setLoggedInUser($scope.user);
+                // $location.path('/');
             })
             .error(function(data, status, headers, config) {
-                if (status === 409) {
-                    $scope.needUserNameError = false;
-                    $scope.needPasswordError = false;
-                    $scope.needConfirmPasswordError = false;
-                    $scope.confirmPasswordError = false;
-                    $scope.duplicateUserError = true;
-                }
+                // if (status === 409) {
+                //     $scope.needUserNameError = false;
+                //     $scope.needPasswordError = false;
+                //     $scope.needConfirmPasswordError = false;
+                //     $scope.confirmPasswordError = false;
+                //     $scope.duplicateUserError = true;
+                // }
             });
     };
 })

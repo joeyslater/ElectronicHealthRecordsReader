@@ -1,29 +1,80 @@
 package main
 
 import (
+	"appengine"
+	"appengine/datastore"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
 	"net/http"
 	"os"
-
-	"appengine"
-	"appengine/datastore"
+	"strings"
 )
 
 func init() {
 	http.HandleFunc("/marla", getMarla)
 	http.HandleFunc("/auth", login)
-	//http.HandleFunc("/register", register)
+	http.HandleFunc("/register", register)
 }
 
 type User struct {
 	Username  string `json: "username"`
-	Password  string
+	Password  string `json: "password"`
 	FirstName string `json: "firstName"`
 	LastName  string `json: "lastName"`
 	Role      string `json: "role"`
+}
+
+func register(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+
+	var newUser User
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newUser)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if strings.TrimSpace(newUser.Role) == "" {
+		newUser.Role = "patient"
+	}
+
+	q := datastore.NewQuery("User").Filter("UserName = ", newUser.Username)
+	var users []User
+	q.GetAll(c, &users)
+
+	if len(users) > 0 {
+		json_msg, err := json.Marshal(newUser)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Fprintf(w, "%s", json_msg)
+	} else {
+		encryptedPassword, err := Crypt(pass)
+
+		if err != nil {
+			panic(err)
+		}
+
+		newUser.Password = string(encryptedPassword)
+
+		fmt.Fprintf(w, "%s", newUser.Password)
+	}
+}
+
+func clear(b []byte) {
+	for i := 0; i < len(b); i++ {
+		b[i] = 0
+	}
+}
+
+func Crypt(password []byte) ([]byte, error) {
+	defer clear(password)
+	return bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {

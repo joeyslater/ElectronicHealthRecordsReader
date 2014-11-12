@@ -4,32 +4,38 @@
 	<br/>
 	<br/>
 
-	<form ng-submit="addUser(credentials)" class="form-horizontal center-block" role="form">
-		<div class="form-group login-form" ng-class="{'has-error': needUserNameError || duplicateUserError}">
+	<form ng-submit="register(credentials)" class="form-horizontal center-block" role="form">
+		<div class="form-group login-form" ng-class="{'has-error': error.firstName}">
 			<label for="firstname" class="col-sm-3 control-label">First Name:</label>
 			<div class="col-sm-9">
 				<input ng-model="credentials.firstName" type="type" class="form-control" placeholder="First Name">
 			</div>
 		</div>
-		<div class="form-group login-form" ng-class="{'has-error': needUserNameError || duplicateUserError}">
+		<div class="form-group login-form" ng-class="{'has-error': error.lastName}">
 			<label for="username" class="col-sm-3 control-label">Last Name:</label>
 			<div class="col-sm-9">
 				<input ng-model="credentials.lastName" type="type" class="form-control" placeholder="Last Name">
 			</div>
 		</div>
-		<div class="form-group login-form" ng-class="{'has-error': needUserNameError || duplicateUserError}">
+		<div class="form-group login-form" ng-class="{'has-error': error.username}">
 			<label for="username" class="col-sm-3 control-label">User Name:</label>
 			<div class="col-sm-9">
 				<input ng-model="credentials.username" type="type" class="form-control" placeholder="Username">
 			</div>
 		</div>
-		<div class="form-group login-form" ng-class="{'has-error': needPasswordError || confirmPasswordError}">
+		<div class="form-group login-form" ng-class="{'has-error': error.emailAddress}">
+			<label for="emailAddress" class="col-sm-3 control-label">Email Address:</label>
+			<div class="col-sm-9">
+				<input ng-model="credentials.emailAddress" type="type" class="form-control" placeholder="Email Address">
+			</div>
+		</div>
+		<div class="form-group login-form" ng-class="{'has-error': error.password}">
 			<label for="inputPassword3" class="col-sm-3 control-label">Password:</label>
 			<div class="col-sm-9">
 				<input ng-model="credentials.password" ng-blur="checkPasswords()" type="password" class="form-control" placeholder="Password" ng-minlength="8">
 			</div>
 		</div>
-		<div class="form-group login-form" ng-class="{'has-error': needConfirmPasswordError || confirmPasswordError}">
+		<div class="form-group login-form" ng-class="{'has-error': error.confirmPassword}">
 			<label for="inputPassword3" class="col-sm-3 control-label">Confirm Password:</label>
 			<div class="col-sm-9">
 				<input ng-model="credentials.confirmPassword" ng-blur="checkPasswords()" type="password" class="form-control" placeholder="Confirm Password" ng-minlength="8">
