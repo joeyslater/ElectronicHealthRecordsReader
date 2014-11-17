@@ -1,66 +1,79 @@
 'use strict';
 
 //Module for the application
-angular.module('medical-guru', [
-    'ngRoute',
-    'ngCookies',
-    'templates-app',
-    'templates-common',
-    'medical-guru.auth',
-    'medical-guru.main',
-    'medical-guru.main.login',
-    'medical-guru.main.register',
-    'medical-guru.main.dashboard'
+angular.module('baymax', [
+	'ngRoute',
+	'ngCookies',
+	'templates-app',
+	'templates-common',
+	'medical-guru.auth',
+	'medical-guru.main',
+	'baymax.faq'
 ])
 
 //Configures the route provider
 .config(function($routeProvider) {
-    $routeProvider
-        .when('/', {
-            templateUrl: 'main/main.tpl.html'
-                // resolve: {
-                //     auth: ["$q", "AuthService", function($q, AuthService) {
-                //         if (AuthService.isAuthenticated()) {
-                //             return $q.when(userInfo);
-                //         } else {
-                //             return $q.reject({
-                //                 authenticated: false
-                //             });
-                //         }
-                //     }]
-        })
-        .when('/register', {
-            templateUrl: 'main/register/main.tpl.html'
-        })
-        .when('/login', {
-            templateUrl: 'main/login/main.tpl.html'
-        })
-        .otherwise({
-            redirectTo: '/'
-        });
+	$routeProvider
+		.when('/', {
+			templateUrl: 'main/main.tpl.html',
+			resolve: {
+				loginRequired: function(AuthService, $location, $q) {
+					return AuthService.loginRequired($location, $q);
+				}
+			}
+		})
+		.when('/register', {
+			templateUrl: 'main/register/main.tpl.html'
+		})
+		.when('/login', {
+			templateUrl: 'main/login/main.tpl.html'
+		})
+		.when('/admin', {
+			templateUrl: 'main/admin/main.tpl.html'
+		})
+		.when('/faq', {
+			templateUrl: 'main/faq/main.tpl.html'
+		})
+		.otherwise({
+			redirectTo: '/'
+		});
 })
 
-// .run(function($rootScope, AuthEvents, AuthService) {
-//         $rootScope.$on('$stateChangeStart', function(event, next) {
-//                 var authorizedRoles = next.data.authorizedRoles;
-//                 if (!AuthService.isAuthorized(authorizedRoles)) {
-//                     event.preventDefault();
-//                     if (AuthService.isAuthenticated()) {
-//                         $rootScope.$broadcast(AuthEvents.notAuthorized);
-//                     } else {
-//                         $rootScope.$broadcast(AuthEvents.notAuthenticated);
-//                     }
-//                 }
-//             }
-//         })
+.config(function($httpProvider) {
+	$httpProvider.interceptors.push([
+		'$injector',
+		function($injector) {
+			return $injector.get('AuthInterceptor');
+		}
+	]);
+})
 
-.controller('AppCtrl', function($scope, UserRoles, AuthService) {
-    $scope.currentUser = null;
-    $scope.userRoles = UserRoles;
-    $scope.isAuthorized = AuthService.isAuthorized;
+.run(function($rootScope, AuthEvents, AuthService) {
+	$rootScope.$on('$stateChangeStart', function(event, next) {
+		var authorizedRoles = next.data.authorizedRoles;
+		if (!AuthService.isAuthorized(authorizedRoles)) {
+			event.preventDefault();
+			if (AuthService.isAuthenticated()) {
+				$rootScope.$broadcast(AuthEvents.notAuthorized);
+			} else {
+				$rootScope.$broadcast(AuthEvents.notAuthenticated);
+			}
+		}
+	});
+})
 
-    $scope.setCurrentUser = function(user) {
-        $scope.currentUser = user;
-    };
+.controller('AppCtrl', function($scope, $location, UserRoles, AuthService, AuthEvents) {
+	$scope.currentUser = null;
+	$scope.userRoles = UserRoles;
+	$scope.isAuthorized = AuthService.isAuthorized;
 
-});
+	$scope.setCurrentUser = function(user) {
+		$scope.currentUser = user;
+	};
+
+	$scope.$on(AuthEvents.loginSuccess, function() {
+		$location.path("dashboard");
+	});
+})
+
+;

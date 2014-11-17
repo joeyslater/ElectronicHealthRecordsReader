@@ -1,36 +1,9 @@
-<div id="dashboard" ng-controller="DashboardCtrl">
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Medical Guru</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Dashboard</a>
-                    </li>
-                    <li><a href="#">Settings</a>
-                    </li>
-                    <li><a href="#">Profile</a>
-                    </li>
-                    <li><a href="#">Help</a>
-                    </li>
-                </ul>
-                <form class="navbar-form navbar-right">
-                    <input type="text" class="form-control" placeholder="Search...">
-                </form>
-            </div>
-        </div>
-    </nav>
+<div id="dashboard" class="height100" ng-controller="DashboardCtrl">
+    <div ng-include src="'main/dashboard/header/main.tpl.html'"></div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
+    <div class="container-fluid height100">
+        <div class="row height100">
+            <div class="col-sm-3 col-md-2 sidebar no-padding height100">
                 <ul class="nav nav-sidebar">
                     <li class="active">
                         <a href="#">Overview</a>
@@ -51,12 +24,14 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                <button>Export</button>
+            <div class="col-sm-9 col-md-10 no-padding height100">
+                <div id="tabs" ng-include src="'main/dashboard/tabs/main.tpl.html'" class="height100"></div>
+
+                <!--                 <button>Export</button>
                 <h2>{{patient.recordTarget.patientRole[0].patient.name.given}} {{patient.recordTarget.patientRole[0].patient.name.family}}</h2>
                 <h1 class="page-header">Dashboard</h1>
                 Marla's Info:
-                <pre>{{patient | json }}</pre>
+                <pre>{{patient | json }}</pre> -->
             </div>
         </div>
     </div>

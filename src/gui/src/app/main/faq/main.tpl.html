@@ -1,0 +1,58 @@
+<div id="faq" class="height100" ng-controller="FaqController">
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Baymax</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+
+			</div>
+		</div>
+	</nav>
+	<div class="height100 holder">
+		<div class="faq shadow container height100">
+			<div class="">
+				<div class="row">
+					<div class="col-sm-9">
+						<h1>Frequently Asked Questions</h1>
+						<span class="text-muted">Below are common questions about managing your Baymax account.</span>
+						<div class="text-muted">
+							<div style="display: inline-block">Jump to:</div>
+							<div style="display: inline-block">
+								<a class="jump-to" ng-click="scrollTo(faq.category)" ng-repeat="faq in faqs">{{faq.category}}</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-9">
+						<div ng-repeat="faq in faqs">
+							<h2 id="{{faq.category}}">{{faq.category}}</h2>
+							<accordion>
+								<accordion-group ng-repeat="question in faq.questions">
+									<accordion-heading>
+										<div ng-class="{'open': $parent.isOpen, 'closed': !$parent.isOpen}">
+											{{question.title}}
+										</div>
+									</accordion-heading>
+									<div ng-class="{'test':isOpen, 'test2':!isOpen}">
+										{{question.content}}
+									</div>
+								</accordion-group>
+							</accordion>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						Sidebar
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

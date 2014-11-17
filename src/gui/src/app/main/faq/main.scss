@@ -1,0 +1,59 @@
+#faq {
+    font-family: "open sans", sans-serif;
+    .holder {
+        overflow: auto;
+    }
+    .faq {
+        background: #FFF;
+        padding: 0 50px;
+    }
+    h1 {
+        color: #444444;
+        font-size: 2em;
+        font-weight: 100;
+        line-height: 44px;
+        margin: 15px 0 0;
+    }
+    h2 {
+        font-size: 1.3em;
+    }
+    .jump-to {
+        padding-left: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        &:after {
+            content: " | ";
+            padding-left: 16px;
+            color: #000000;
+        }
+        &:last-child:after {
+            content: "";
+        }
+    }
+    .open:before {
+        content: "-";
+    }
+    .closed:before {
+        content: "+";
+    }
+    .accordion-toggle {
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 10px;
+        display: block;
+    }
+    .panel-heading {
+        border-width: 1px 0;
+        border-color: #444;
+        border-style: dashed;
+        padding: 0;
+    }
+    .panel {
+        border: 0;
+    }
+    .panel-group .panel + .panel, .panel-group .panel {
+        margin: 0;
+        margin-bottom: -1px;
+    }
+}

@@ -1,31 +1,30 @@
 <!doctype html>
-<html>
+<html class="height100">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Medical Guru</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Baymax: Personal Healthcare Companion</title>
 
-    <!-- Compiled CSS -->
-    <% cssFiles.forEach(function(file) { %>
-        <link rel="stylesheet" type="text/css" href="<%= file %>" />
-        <% }); %>
+	<!-- Compiled CSS -->
+	<% cssFiles.forEach(function(file) { %>
+		<link rel="stylesheet" type="text/css" href="<%= file %>" />
+		<% }); %>
 
-            <!-- Compiled CSS -->
-            <% jsFiles.forEach(function(file) { %>
-                <script rel="text/javascript" src="<%= file %>"></script>
-                <% }); %>
+			<!-- Compiled JS -->
+			<% jsFiles.forEach(function(file) { %>
+				<script rel="text/javascript" src="<%= file %>"></script>
+				<% }); %>
 
-                    <script>
-                    angular.element(document).ready(function() {
-                        angular.bootstrap(document, ['medical-guru']);
-                    });
-                    </script>
-
+					<script>
+					angular.element(document).ready(function() {
+						angular.bootstrap(document, ['baymax']);
+					});
+					</script>
 </head>
 
-<body ng-controller="AppCtrl">
-    <div ng-view></div>
+<body class="height100" ng-controller="AppCtrl">
+	<div class="height100" ng-view></div>
 </body>
 
 </html>

@@ -1,0 +1,96 @@
+<div id="dashboard" ng-controller="AdminController">
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Medical Guru</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">Dashboard</a>
+					</li>
+					<li><a href="#">Settings</a>
+					</li>
+					<li><a href="#">Profile</a>
+					</li>
+					<li><a href="#">Help</a>
+					</li>
+				</ul>
+				<form class="navbar-form navbar-right">
+					<input type="text" class="form-control" placeholder="Search...">
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12 main">
+				<table class="table table-hover">
+					<tr>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Username</th>
+						<th>Email Address</th>
+						<th>Role</th>
+						<th>Actions</th>
+					</tr>
+					<tr>
+						<td>
+							<input type="input" class="form-control" placeholder="Filter First Name" ng-model="filter.firstName" />
+						</td>
+						<td>
+							<input type="input" class="form-control" placeholder="Filter Last Name" ng-model="filter.lastName" />
+						</td>
+						<td>
+							<input type="input" class="form-control" placeholder="Filter User Name" ng-model="filter.username" />
+						</td>
+						<td>
+							<input type="input" class="form-control" placeholder="Filter First Name" ng-model="filter.emailAddress" />
+						</td>
+						<td>
+							<select class="form-control">
+								<option>Admin</option>
+								<option>Doctor</option>
+								<option>Patient</option>
+								<option>Nurse</option>
+							</select>
+						</td>
+						<td>
+							<button class="btn btn-default">Filter</button>
+						</td>
+					</tr>
+					<tr ng-repeat="user in users">
+						<td>
+							<span ng-if="!editMode">{{user.firstName}}</span>
+							<input ng-if="editMode" ng-model="user.firstName" type="text" />
+						</td>
+						<td>
+							<span ng-if="!editMode">{{user.lastName}}</span>
+							<input ng-if="editMode" ng-model="user.lastName" type="text" />
+						</td>
+						<td>
+							<span ng-if="!editMode">{{user.username}}</span>
+							<input ng-if="editMode" ng-model="user.username" type="text" />
+						</td>
+						<td>
+							<span ng-if="!editMode">{{user.emailAddress}}</span>
+							<input ng-if="editMode" ng-model="user.emailAddress" type="text" />
+						</td>
+						<td ng-if="!editMode">{{user.role}}</td>
+						<td>
+							<button ng-if="!editMode" ng-click="editMode = true" type="button" class="btn btn-primary">Edit</button>
+							<button ng-if="editMode" ng-click="editMode = false" type="button" class="btn btn-primary">Save</button>
+							<button ng-if="editMode" ng-click="editMode = false" type="button" class="btn btn-default">Cancel</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

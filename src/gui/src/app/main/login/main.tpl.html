@@ -1,20 +1,24 @@
 <div id="login" ng-controller="LoginController" class="well container center-block shadow">
-    <h1 class="text-center">Medical Guru</h1>
+    <img src="assets/images/logo.png" class="pull-left" />
+    <h1 class="text-left pull-left">Baymax</h1>
+    <h2 class="text-left pull-left">Personal Healthcare Assistant</h2>
     <form ng-submit="login(credentials)" class="form-horizontal center-block row" role="form">
-        <div ng-class="{'has-error': username-error}" class="col-sm-12">
+        <div ng-class="{'has-error': formError.username}" class="col-sm-12">
             <input ng-model="credentials.username" type="text" class="form-control" id="username" placeholder="Username">
         </div>
-        <div ng-class="{'has-error': password-error}" class="col-sm-12">
+        <div ng-class="{'has-error': formError.password}" class="col-sm-12">
             <input ng-model="credentials.password" type="password" class="form-control" id="password" placeholder="Password">
         </div>
-        <div ng-show="error" class="col-sm-12">
-            <p class="text-danger">Either your username, password, or both are incorrect.</p>
+        <div ng-show="formError.password || formError.username" class="col-sm-12">
+            <p class="text-danger">{{formError.password || formError.username}}</p>
         </div>
         <div class="col-sm-12">
-            <button type="submit" class="btn btn-primary col-sm-12">Sign in</button>
+            <input type="submit" class="btn btn-primary col-sm-12" value="Sign In"></input>
         </div>
     </form>
 </div>
 <div class="text-center">
-    <a href="#/register">Add User</a>
+    <a href="#/register">Create an account</a>
+    •
+    <a href="#/faq">Frequently Asked Questions</a>
 </div>

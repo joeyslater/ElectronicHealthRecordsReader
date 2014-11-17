@@ -1,14 +1,20 @@
-angular.module('medical-guru.auth', [])
+angular.module('medical-guru.auth', [
+	"ngCookies"
+])
 
-.factory('AuthService', function($http, Session) {
+.factory('AuthService', function($http, $location, $cookies, Session) {
 	var authService = {};
 
 	authService.login = function(credentials) {
 		return $http
 			.post('/auth', credentials)
-			.then(function(res) {
-				Session.create(res.data.id, res.data.user.id, res.data.user.role);
-				return res.data.user;
+			.success(function(data, status, headers, config) {
+				console.log("test");
+				Session.create($cookies.session, data.username, data.role);
+				return data.user;
+			}).error(function(data, status, headers, config) {
+				console.log("nope");
+				return null;
 			});
 	};
 
@@ -22,6 +28,38 @@ angular.module('medical-guru.auth', [])
 		}
 		return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
 	};
+
+	authService.redirectIfAuthenticated = function(route) {
+		return function($location, $q) {
+
+			var deferred = $q.defer();
+
+			if (authService.isAuthenticated()) {
+				deferred.reject();
+				$location.path(route);
+			} else {
+				deferred.resolve();
+			}
+
+			return deferred.promise;
+		};
+	};
+
+	authService.loginRequired = function($location, $q) {
+		var deferred = $q.defer();
+
+		if (!authService.isAuthenticated()) {
+			deferred.reject();
+			$location.path('/login');
+		} else {
+			deferred.resolve();
+		}
+
+		return deferred.promise;
+	};
+
+
+
 
 	return authService;
 })
@@ -38,6 +76,20 @@ angular.module('medical-guru.auth', [])
 		this.userRole = null;
 	};
 	return this;
+})
+
+.factory('AuthInterceptor', function($rootScope, $q, AuthEvents) {
+	return {
+		responseError: function(response) {
+			$rootScope.$broadcast({
+				401: AuthEvents.notAuthenticated,
+				403: AuthEvents.notAuthorized,
+				419: AuthEvents.sessionTimeout,
+				440: AuthEvents.sessionTimeout
+			}[response.status], response);
+			return $q.reject(response);
+		}
+	};
 })
 
 .constant('UserRoles', {

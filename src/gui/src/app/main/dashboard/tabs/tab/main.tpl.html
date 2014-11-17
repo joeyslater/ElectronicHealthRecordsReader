@@ -1,0 +1,31 @@
+<div class="row no-margin sub-tabs">
+	<tabset>
+		<tab heading="Overview"></tab>
+		<tab ng-repeat="subtab in subtabs">
+			<tab-heading>
+				<span>{{subtab.title}}</span>
+				<span class="close" ng-click="removeTab($index)">&times;</span>
+			</tab-heading>
+		</tab>
+	</tabset>
+</div>
+<div class="row height100 no-margin">
+	<div class="col-sm-4 col-md-2 patient-sidebar height100 no-padding">
+		<span class="header">{{patient.name.family}}, {{patient.name.given}}</span>
+		<div ng-switch on="patient.administrativeGenderCode.code">
+			<div ng-switch-when="F">Female</div>
+			<div ng-switch-when="M">Male</div>
+			<div ng-switch-when="UN">Undifferentiated</div>
+		</div>
+		<div>{{parseStringToDate(patient.birthTime.value) | date : 'mediumDate'}} (Age: {{calcAge()}})</div>
+		<div>{{patient.raceCode.displayName}}</div>
+		<div>{{patient.ethnicGroupCode.displayName}}</div>
+
+		<div class="sub-header">Contact Information</div>
+		<div>{{contactInfo.telecom.value}}</div>
+		<div>{{contactInfo.address.streetAddressLine}},</div>
+		<div>{{contactInfo.address.city}}, {{contactInfo.address.state}} {{contactInfo.address.postalCode}} {{contactInfo.address.country}}</div>
+	</div>
+	<div class="col-sm-10">
+	</div>
+</div>
