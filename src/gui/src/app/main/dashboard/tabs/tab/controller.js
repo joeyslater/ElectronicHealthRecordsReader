@@ -11,12 +11,7 @@ angular.module('baymax.tab', [
 	$scope.currTabIndex = 0;
 
 	$scope.subtabs = [{
-		title: "Pulminary",
-		content: "Nahhh"
-	}, {
-		title: "Oncology"
-	}, {
-		title: "Cardiology"
+		title: "Pulmonary "
 	}];
 
 	$scope.openInput = function() {
@@ -26,13 +21,19 @@ angular.module('baymax.tab', [
 	};
 
 	$scope.overview = function() {
+		$scope.overviewBoo = true;
+		$scope.pulviewBoo = false;
+
 		$scope.currTabIndex = 0;
 	};
 
-
 	$scope.getSubTab = function(index) {
+		$scope.overviewBoo = false;
+		$scope.pulviewBoo = true;
 		$scope.currTabIndex = index;
 	};
+
+
 
 	$scope.uploadCcd = function(element) {
 		$scope.url = "";

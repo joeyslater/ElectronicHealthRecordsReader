@@ -46,12 +46,7 @@ angular.module('baymax.patient-portal', [
 			return true;
 		}
 
-		// Assume if it has a length property with a non-zero value
-		// that that property is correct.
-		if (obj.length > 0) {
-			return false;
-		}
-		if (obj.length === 0) {
+		if (!obj) {
 			return true;
 		}
 
@@ -63,6 +58,17 @@ angular.module('baymax.patient-portal', [
 				return false;
 			}
 		}
+
+		// Assume if it has a length property with a non-zero value
+		// that that property is correct.
+		if (obj.length > 0) {
+			return false;
+		}
+		if (obj.length === 0) {
+			return true;
+		}
+
+
 
 		return true;
 	};
