@@ -1,7 +1,7 @@
 <div id="profile" class="height100" ng-controller="ProfileController">
 	<div id="header" ng-include src="'main/header/main.tpl.html'"></div>
 
-	<div class="holder">
+	<div class="height100 holder">
 		<div class="container shadow height100">
 			<h2>Edit Profile</h2>
 			<alert ng-repeat="alert in alerts" dismiss-on-timeout="2000" type="{{alert.type}}" close="closeAlert($index)">{{alert.message}}</alert>

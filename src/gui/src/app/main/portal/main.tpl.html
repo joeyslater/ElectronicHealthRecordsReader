@@ -5,7 +5,7 @@
 				<img alt="Profile Picture" ng-src="{{profileImage || '/assets/images/loading.gif'}}" ng-show="profileImage" id="profile-pic" />
 			</div>
 			<span class="header">{{currentUser.lastName}}, {{currentUser.firstName}}</span>
-			<div ng-if="ccd">
+			<div ng-if="!isEmpty(ccd)">
 				<div ng-switch on="patient.administrativeGenderCode.code">
 					<div ng-switch-when="F">Female</div>
 					<div ng-switch-when="M">Male</div>
@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div class=" col-sm-9 col-md-10 main-content height100">
-			<div ng-if="ccd" class="row container ">
+			<div ng-if="isEmpty(ccd)" class="row container ">
 				<div class="col-xs-12 col-md-6 " ng-repeat="component in components ">
 					<div class="panel panel-primary ">
 						<div class="panel-heading ">
