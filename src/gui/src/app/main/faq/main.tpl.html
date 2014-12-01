@@ -1,21 +1,8 @@
 <div id="faq" class="height100" ng-controller="FaqController">
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Baymax</a>
-			</div>
-			<div id="navbar" class="navbar-collapse collapse">
+	<div id="header" ng-if="isLoggedIn()" ng-include src="'main/header/main.tpl.html'"></div>
+	<div id="header" ng-if="!isLoggedIn()" ng-include src="'main/header/not-logged-in-header.tpl.html'"></div>
 
-			</div>
-		</div>
-	</nav>
-	<div class="height100 holder">
+	<div class="holder">
 		<div class="faq shadow container height100">
 			<div class="">
 				<div class="row">
@@ -47,9 +34,32 @@
 								</accordion-group>
 							</accordion>
 						</div>
-					</div>
-					<div class="col-sm-3">
-						Sidebar
+						<div class="panel">
+							<hr/>
+							<h2>Test Accounts</h2>
+							<table class="table">
+								<tr>
+									<th>Username</th>
+									<th>Role</th>
+									<th>Password</th>
+								</tr>
+								<tr>
+									<td>admin</td>
+									<td>admin</td>
+									<td>password</td>
+								</tr>
+								<tr>
+									<td>doctor</td>
+									<td>doctor</td>
+									<td>password</td>
+								</tr>
+								<tr>
+									<td>marladixon</td>
+									<td>patient</td>
+									<td>password</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>

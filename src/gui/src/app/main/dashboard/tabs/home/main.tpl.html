@@ -1,5 +1,18 @@
-Potential Homepage Additions:
-<ul>
-	<li>Daily Calendar</li>
-	<li>CCD Import</li>
-</ul>
+<div style="background:white;" class="height100" ng-controller="HomeController">
+	<div style="padding:30px;" class="container-fluid">
+		<div class="row">
+			<div>
+				<strong>Under Construction</strong>
+			</div>
+
+			<button class="btn btn-primary" id="" ng-click="openCcdInput()">Click Here for CCD Quick View</button>
+			<input style="display:none;" type="file" name="file" id="ccdFileInput" accept="application/xml" onchange="angular.element(this).scope().uploadCcd(this)" />
+
+			<ul class="patients" style="margin-top: 10px;">
+				<li ng-repeat="patient in patients"><a style="cursor: pointer;" ng-click="openPatientTab(patient)">{{patient.firstName}} {{patient.lastName}} - {{patient.username}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+</div>

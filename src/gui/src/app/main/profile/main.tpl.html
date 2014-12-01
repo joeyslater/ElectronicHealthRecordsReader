@@ -1,0 +1,76 @@
+<div id="profile" class="height100" ng-controller="ProfileController">
+	<div id="header" ng-include src="'main/header/main.tpl.html'"></div>
+
+	<div class="holder">
+		<div class="container shadow height100">
+			<h2>Edit Profile</h2>
+			<alert ng-repeat="alert in alerts" dismiss-on-timeout="2000" type="{{alert.type}}" close="closeAlert($index)">{{alert.message}}</alert>
+
+			<div class="row">
+				<div class="col-md-2 col-sm-3">
+					<form id="prof-pic" action="/upload" method="post" enctype="multipart/form-data">
+						<div class="prof-pic">
+							<img ng-src="{{profileImage || '/assets/images/loading.gif'}}" alt="Profile" />
+							<h3 id="profPicImage" ng-click="openInput()">Edit Profile Pic</h3>
+							<input type="file" name="file" id="profPicFileInput" accept="image/*" onchange="angular.element(this).scope().uploadProfPic(this)" />
+						</div>
+					</form>
+				</div>
+				<div class="col-md-10 col-sm-9">
+					<div class="col-md-4">
+						<table class="table table-condensed info">
+							<tr>
+								<th>First Name:</th>
+								<td>
+									<span ng-if="!!!editMode">{{currentUser.firstName}}</span>
+									<input class="form-control" ng-if="!!editMode" ng-model="user.firstName" />
+								</td>
+							</tr>
+							<tr>
+								<th>Last Name:</th>
+								<td>
+									<span ng-if="!!!editMode">{{currentUser.lastName}}</span>
+									<input class="form-control" ng-if="!!editMode" ng-model="user.lastName" />
+								</td>
+							</tr>
+							<tr>
+								<th>Username:</th>
+								<td>
+									<span ng-if="!!!editMode">{{currentUser.username}}</span>
+									<input class="form-control" ng-if="!!editMode" ng-model="user.username" />
+								</td>
+							</tr>
+							<tr>
+								<th>Email Address:</th>
+								<td>
+									<span ng-if="!!!editMode">{{currentUser.emailAddress}}</span>
+									<input class="form-control" ng-if="!!editMode" ng-model="user.emailAddress" />
+								</td>
+							</tr>
+						</table>
+						<button ng-if="!!!editMode" ng-click="edit()" class="btn btn-default">Edit Profile</button>
+						<button ng-if="!!editMode" ng-click="submit(user); " class="btn btn-primary">Submit</button>
+						<button ng-if="!!editMode" ng-click="cancel(); " class="btn btn-default">Cancel</button>
+
+
+					</div>
+					<div class="col-md-4" ng-if="isAuthorized(['doctor']);">
+						<form>
+							<h4>Specialties</h4>
+							<span ng-repeat="specialty in specialties">
+									<label class="checkbox" for="{{specialty}}">
+										<input type="checkbox" ng-model="selection.ids[specialty]" name="group" id="{{specialty}}" />
+										{{specialty}}
+									</label>
+							</span>
+							<button ng-click="submitSpecialties()" class="btn btn-default">Submit Specialties</button>
+							<pre ng-bind="selection.ids | json"></pre>
+						</form>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>

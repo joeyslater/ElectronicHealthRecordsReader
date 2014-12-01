@@ -1,0 +1,69 @@
+#portal {
+	.patient-sidebar {
+		padding: 20px;
+		border-right: 1px solid #DDD;
+		.header, .sub-header {
+			font-weight: bold;
+			color: #428BCA;
+		}
+		.header {
+			font-size: 14px;
+		}
+		.sub-header {
+			margin-top: 8px;
+		}
+		#profile-pic {
+			width: 50%;
+			margin-bottom: 10px;
+			border: 1px solid #000;
+		}
+		button {
+			margin-top: 5px;
+			width: 100%;
+		}
+	}
+	.no-data{
+		padding: 15px;
+	}
+	.panel-body {
+		table {
+			margin: 0;
+			td {
+				border-color: #007AB0;
+			}
+		}
+		&> div > div > ul {
+			margin-top: 10px;
+		}
+		.nav-tabs {
+			border-color: #007AB0;
+			&> li:first-child > a {
+				border-left: 0px;
+			}
+			&> li > a:hover {
+				border-color: #007AB0;
+				border-bottom-color: #FFF;
+				border-top-color: #FFF;
+			}
+			&> li > a {
+				border-radius: 0px;
+			}
+			&> li.active > a, &> li.active > a:hover, &> li.active > a:focus {
+				border-color: #007AB0;
+				border-bottom-color: transparent;
+				border-top-color: #FFF;
+			}
+		}
+	}
+	.panel-heading {
+		background: #007AB0;
+		border-color: #007AB0;
+	}
+	.panel-footer {
+		background: #D3D3D3;
+		border-color: #007AB0;
+	}
+	.main-content {
+		padding: 20px;
+	}
+}

@@ -1,92 +1,46 @@
-<div id="dashboard" ng-controller="AdminController">
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Medical Guru</a>
-			</div>
-			<div id="navbar" class="navbar-collapse collapse">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Dashboard</a>
-					</li>
-					<li><a href="#">Settings</a>
-					</li>
-					<li><a href="#">Profile</a>
-					</li>
-					<li><a href="#">Help</a>
-					</li>
-				</ul>
-				<form class="navbar-form navbar-right">
-					<input type="text" class="form-control" placeholder="Search...">
-				</form>
-			</div>
-		</div>
-	</nav>
-
-	<div class="container-fluid">
+<div id="admin-dash" ng-controller="AdminController">
+	<div class="container height100">
+		<h1>Admin Dashboard</h1>
+		<alert ng-repeat="alert in alerts" dismiss-on-timeout="2000" type="{{alert.type}}" close="closeAlert($index)">{{alert.message}}</alert>
 		<div class="row">
 			<div class="col-sm-12 main">
-				<table class="table table-hover">
+				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-						<th>Username</th>
-						<th>Email Address</th>
-						<th>Role</th>
+						<th class="info-col">First Name</th>
+						<th class="info-col">Last Name</th>
+						<th class="info-col">Username</th>
+						<th class="info-col">Email Address</th>
+						<th class="info-col-role">Role</th>
 						<th>Actions</th>
 					</tr>
-					<tr>
+					<tr ng-repeat="user in users" ng-class="{danger: !!user.deleteMode}">
 						<td>
-							<input type="input" class="form-control" placeholder="Filter First Name" ng-model="filter.firstName" />
+							<span ng-if="!!!user.editMode">{{user.firstName}}</span>
+							<input ng-if="!!user.editMode" ng-model="user.firstName" type="text" class="form-control" />
 						</td>
 						<td>
-							<input type="input" class="form-control" placeholder="Filter Last Name" ng-model="filter.lastName" />
+							<span ng-if="!!!user.editMode">{{user.lastName}}</span>
+							<input ng-if="!!user.editMode" ng-model="user.lastName" type="text" class="form-control" />
 						</td>
 						<td>
-							<input type="input" class="form-control" placeholder="Filter User Name" ng-model="filter.username" />
+							<span ng-if="!!!user.editMode">{{user.username}}</span>
+							<input ng-if="!!user.editMode" ng-model="user.username" type="text" class="form-control" />
 						</td>
 						<td>
-							<input type="input" class="form-control" placeholder="Filter First Name" ng-model="filter.emailAddress" />
+							<span ng-if="!!!user.editMode">{{user.emailAddress}}</span>
+							<input ng-if="!!user.editMode" ng-model="user.emailAddress" type="text" class="form-control" />
 						</td>
 						<td>
-							<select class="form-control">
-								<option>Admin</option>
-								<option>Doctor</option>
-								<option>Patient</option>
-								<option>Nurse</option>
+							<span ng-if="!!!user.editMode">{{user.role}}</span>
+							<select ng-if="!!user.editMode" ng-model="user.role" class="form-control">
+								<option ng-repeat="role in userRoles">{{role}}</option>
 							</select>
 						</td>
-						<td>
-							<button class="btn btn-default">Filter</button>
-						</td>
-					</tr>
-					<tr ng-repeat="user in users">
-						<td>
-							<span ng-if="!editMode">{{user.firstName}}</span>
-							<input ng-if="editMode" ng-model="user.firstName" type="text" />
-						</td>
-						<td>
-							<span ng-if="!editMode">{{user.lastName}}</span>
-							<input ng-if="editMode" ng-model="user.lastName" type="text" />
-						</td>
-						<td>
-							<span ng-if="!editMode">{{user.username}}</span>
-							<input ng-if="editMode" ng-model="user.username" type="text" />
-						</td>
-						<td>
-							<span ng-if="!editMode">{{user.emailAddress}}</span>
-							<input ng-if="editMode" ng-model="user.emailAddress" type="text" />
-						</td>
-						<td ng-if="!editMode">{{user.role}}</td>
-						<td>
-							<button ng-if="!editMode" ng-click="editMode = true" type="button" class="btn btn-primary">Edit</button>
-							<button ng-if="editMode" ng-click="editMode = false" type="button" class="btn btn-primary">Save</button>
-							<button ng-if="editMode" ng-click="editMode = false" type="button" class="btn btn-default">Cancel</button>
+						<td class="text-center form-buttons">
+							<button ng-if="!!!user.editMode && !!!user.deleteMode" ng-click="edit(user)" type="button" class="btn btn-primary">Edit</button>
+							<button ng-if="!!!user.editMode && !!!user.deleteMode" ng-click="deleteUser(user)" type="button" class="btn btn-danger">Delete</button>
+							<button ng-if="!!user.editMode || !!user.deleteMode" ng-click="confirm(user, $index)" type="button" class="btn btn-primary">Confirm</button>
+							<button ng-if="!!user.editMode || !!user.deleteMode" ng-click="cancel(user, $index)" type="button" class="btn btn-default">Cancel</button>
 						</td>
 					</tr>
 				</table>

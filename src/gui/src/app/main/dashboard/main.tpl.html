@@ -1,39 +1,9 @@
 <div id="dashboard" class="height100" ng-controller="DashboardCtrl">
-    <div ng-include src="'main/dashboard/header/main.tpl.html'"></div>
-
-    <div class="container-fluid height100">
-        <div class="row height100">
-            <div class="col-sm-3 col-md-2 sidebar no-padding height100">
-                <ul class="nav nav-sidebar">
-                    <li class="active">
-                        <a href="#">Overview</a>
-                    </li>
-                    <li>
-                        <a href="#">Reports</a>
-                    </li>
-                    <li>
-                        <a href="#">Analytics</a>
-                    </li>
-                    <li>
-                        <a href="#">Export</a>
-                    </li>
-                </ul>
-                <ul class="nav nav-sidebar">
-                    <li>
-                        <a href="">More</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-sm-9 col-md-10 no-padding height100">
-                <div id="tabs" ng-include src="'main/dashboard/tabs/main.tpl.html'" class="height100"></div>
-
-                <!--                 <button>Export</button>
-                <h2>{{patient.recordTarget.patientRole[0].patient.name.given}} {{patient.recordTarget.patientRole[0].patient.name.family}}</h2>
-                <h1 class="page-header">Dashboard</h1>
-                Marla's Info:
-                <pre>{{patient | json }}</pre> -->
-            </div>
-        </div>
-    </div>
-
+	<div class="container-fluid height100">
+		<div class="row height100">
+			<div class="col-sm-12 no-padding height100">
+				<div id="tabs" ng-include src="'main/dashboard/tabs/main.tpl.html'" class="height100"></div>
+			</div>
+		</div>
+	</div>
 </div>

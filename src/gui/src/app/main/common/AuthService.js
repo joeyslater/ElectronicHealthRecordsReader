@@ -1,79 +1,98 @@
-angular.module('medical-guru.auth', [
+angular.module('baymax.auth', [
 	"ngCookies"
 ])
 
-.factory('AuthService', function($http, $location, $cookies, Session) {
+.factory('AuthService', function($http, $rootScope, $location, $cookies, $cookieStore, Session, AuthEvents) {
 	var authService = {};
 
 	authService.login = function(credentials) {
 		return $http
 			.post('/auth', credentials)
 			.success(function(data, status, headers, config) {
-				console.log("test");
-				Session.create($cookies.session, data.username, data.role);
-				return data.user;
+				Session.create(data.Id, data.username, data.role, data);
+				return data;
 			}).error(function(data, status, headers, config) {
-				console.log("nope");
-				return null;
+				return status;
+			});
+	};
+
+	authService.register = function(credentials) {
+		return $http
+			.post('/register', credentials)
+			.success(function(data, status, headers, config) {
+				Session.create(data.Id, data.username, data.role, data);
+				return data;
+			}).error(function(data, status, headers, config) {
+				return status;
+			});
+	};
+
+	authService.logout = function() {
+		return $http
+			.post('/logout')
+			.success(function(data, status, headers, config) {
+				Session.destroy();
+				$rootScope.$broadcast(AuthEvents.logoutSuccess);
+			}).error(function(data, status, headers, config) {
+				Session.destroy();
+				$rootScope.$broadcast(AuthEvents.logoutSuccess);
 			});
 	};
 
 	authService.isAuthenticated = function() {
-		return !!Session.userId;
+		return !!$cookieStore.get('userId');
 	};
 
 	authService.isAuthorized = function(authorizedRoles) {
 		if (!angular.isArray(authorizedRoles)) {
 			authorizedRoles = [authorizedRoles];
 		}
-		return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+		return (authService.isAuthenticated() && authorizedRoles.indexOf($cookieStore.get('userRole')) !== -1);
 	};
 
-	authService.redirectIfAuthenticated = function(route) {
-		return function($location, $q) {
-
-			var deferred = $q.defer();
-
-			if (authService.isAuthenticated()) {
-				deferred.reject();
-				$location.path(route);
-			} else {
-				deferred.resolve();
-			}
-
-			return deferred.promise;
-		};
+	authService.redirectIfAuthenticated = function(route, $location, $q) {
+		var defer = $q.defer();
+		if (authService.isAuthenticated()) {
+			$location.path(route);
+		}
+		defer.resolve();
+		return defer.promise;
 	};
 
 	authService.loginRequired = function($location, $q) {
 		var deferred = $q.defer();
-
 		if (!authService.isAuthenticated()) {
 			deferred.reject();
-			$location.path('/login');
+			$location.path('login');
 		} else {
 			deferred.resolve();
 		}
-
 		return deferred.promise;
 	};
-
-
-
 
 	return authService;
 })
 
-.service('Session', function() {
-	this.create = function(sessionId, userId, userRole) {
-		this.id = sessionId;
+.service('Session', function($cookieStore) {
+	this.create = function(id, userId, userRole, user) {
+		this.id = id;
 		this.userId = userId;
 		this.userRole = userRole;
+		this.user = user;
+		$cookieStore.put('id', this.id);
+		$cookieStore.put('userId', this.userId);
+		$cookieStore.put('userRole', this.userRole);
+		$cookieStore.put('user', this.user);
 	};
 	this.destroy = function() {
 		this.id = null;
 		this.userId = null;
 		this.userRole = null;
+		this.user = null;
+		$cookieStore.remove('id');
+		$cookieStore.remove('userId');
+		$cookieStore.remove('userRole');
+		$cookieStore.remove('user');
 	};
 	return this;
 })
@@ -93,7 +112,6 @@ angular.module('medical-guru.auth', [
 })
 
 .constant('UserRoles', {
-	all: '*',
 	admin: 'admin',
 	doctor: 'doctor',
 	nurse: 'nurse',

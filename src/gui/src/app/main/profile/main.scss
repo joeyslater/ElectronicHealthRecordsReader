@@ -1,0 +1,43 @@
+#profile {
+	.holder {
+		height: auto;
+	}
+	.container {
+		background: #FFF;
+		padding: 0 30px;
+	}
+	.prof-pic {
+		&> h3 {
+			padding: 10px;
+			width: 150px;
+			font-size: 14px;
+			background: #007AB0;
+			color: #FFF;
+			font-weight: bold;
+			cursor: pointer;
+			clear: both;
+			margin: 0px;
+			z-index: 1;
+			position: absolute;
+			top: 115px;
+			opacity: 0.8;
+		}
+		&> h3:hover {
+			background: #00577E;
+		}
+		img {
+			width: 150px;
+			height: 150px;
+		}
+	}
+	#profPicFileInput {
+		cursor: pointer;
+		display: none;
+	}
+	.table.info {
+		width: auto;
+		td, th {
+			vertical-align: middle;
+		}
+	}
+}

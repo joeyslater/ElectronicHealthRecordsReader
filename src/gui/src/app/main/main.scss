@@ -1,1 +1,15 @@
-
+.navbar {
+	background: #007AB0;
+	a {
+		color: white;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	a:hover {
+		background: inherit;
+	}
+	img {
+		height: 50px;
+		padding-right: 10px;
+	}
+}

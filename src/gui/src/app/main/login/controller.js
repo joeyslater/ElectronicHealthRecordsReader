@@ -1,6 +1,6 @@
 //Login module
-angular.module('medical-guru.main.login', [
-	'medical-guru.auth'
+angular.module('baymax.login', [
+	'baymax.auth'
 ])
 
 //Controller for Login
@@ -22,9 +22,9 @@ angular.module('medical-guru.main.login', [
 			$("#password").focus();
 		} else {
 			AuthService.login(credentials).then(
-				function(user) {
+				function(res) {
+					$scope.setCurrentUser(res.data);
 					$rootScope.$broadcast(AuthEvents.loginSuccess);
-					$scope.setCurrentUser(user);
 				},
 				function() {
 					$scope.formError.password = "The email or password you entered is incorrect";

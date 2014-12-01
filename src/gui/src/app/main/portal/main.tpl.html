@@ -1,0 +1,139 @@
+<div id="portal" ng-controller="PatientPortalController">
+	<div class="row height100 no-margin">
+		<div class="col-sm-3 col-md-2 patient-sidebar height100 no-padding">
+			<div>
+				<img alt="Profile Picture" ng-src="{{profileImage || '/assets/images/loading.gif'}}" ng-show="profileImage" id="profile-pic" />
+			</div>
+			<span class="header">{{currentUser.lastName}}, {{currentUser.firstName}}</span>
+			<div ng-if="ccd">
+				<div ng-switch on="patient.administrativeGenderCode.code">
+					<div ng-switch-when="F">Female</div>
+					<div ng-switch-when="M">Male</div>
+					<div ng-switch-when="UN">Undifferentiated</div>
+				</div>
+				<div>{{birthTime | date : 'mediumDate'}} (Age: {{age}})</div>
+				<div>{{patient.raceCode.displayName}}</div>
+				<div>{{patient.ethnicGroupCode.displayName}}</div>
+
+				<div class="sub-header">Contact Information</div>
+				<div>{{contactInfo.telecom.value}}</div>
+				<div>{{contactInfo.address.streetAddressLine}},</div>
+				<div>{{contactInfo.address.city}}, {{contactInfo.address.state}} {{contactInfo.address.postalCode}} {{contactInfo.address.country}}</div>
+			</div>
+			<div>
+				<button ng-click="openInput()" class="btn btn-primary">Import CCD</button>
+				<input type="file" name="file" id="ccdInput" accept="application/xml" onchange="angular.element(this).scope().uploadCcd(this)" style="display:none;" />
+			</div>
+		</div>
+		<div class=" col-sm-9 col-md-10 main-content height100">
+			<div ng-if="ccd" class="row container ">
+				<div class="col-xs-12 col-md-6 " ng-repeat="component in components ">
+					<div class="panel panel-primary ">
+						<div class="panel-heading ">
+							<h3 class="panel-title ">{{getUpdatedSectionTitle(component.section.title) | capitalize}}</h3>
+						</div>
+						<div class="panel-body no-padding ">
+							<div ng-switch="component.section.code.code ">
+								<div ng-switch-when="11369-6">
+									<div class="no-data" ng-if="!component.section.entry || component.section.entry.length === 0">No Data Available</div>
+									<ul>
+										<li ng-repeat="entry in component.section.entry">{{entry.substanceAdministration.consumable.manufacturedProduct.manufacturedMaterial.code.originalText.data}} - {{entry.substanceAdministration.doseQuantity.value}} {{entry.substanceAdministration.doseQuantity.unit}} <i>({{entry.substanceAdministration.statusCode.code}})</i>
+										</li>
+									</ul>
+								</div>
+								<div ng-switch-when="29762-2">
+									<div class="no-data" ng-if="!component.section.entry || component.section.entry.length === 0">No Data Available</div>
+									<ul>
+										<li ng-repeat="entry in component.section.entry">
+											{{entry.observation.value.displayName}}
+										</li>
+									</ul>
+								</div>
+								<div ng-switch-when="48765-2 ">
+									<div class="no-data" ng-if="!component.section.text.table.tbody || component.section.text.table.tbody.tr.length === 0">No Data Available</div>
+									<table class="table ">
+										<tr>
+											<th ng-repeat="th in component.section.text.table.thead.tr[0].th ">{{th}}</th>
+										</tr>
+										<tr ng-repeat="tr in component.section.text.table.tbody.tr ">
+											<td ng-repeat="td in tr.td ">{{getNotBlank(td.text, td.content.value)}}</td>
+										</tr>
+									</table>
+								</div>
+								<div ng-switch-when="10160-0 ">
+									<div class="no-data" ng-if="!component.section.entry || component.section.entry.length === 0">No Data Available</div>
+									<table ng-if="component.section.entry && component.section.entry.length > 0" class="table table-condensed ">
+										<tr ng-repeat="e in component.section.entry ">
+											<td>{{e.substanceAdministration.text.data}} <i>({{e.substanceAdministration.statusCode.code}} - Ended: {{parseStringToDate(e.substanceAdministration.text.effectiveTime.high.value) | date: 'MM/dd/yyyy'}})</i>
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div ng-switch-when="30954-2">
+									<div class="no-data" ng-if="!component.section.entry || component.section.entry.length === 0">No Data Available</div>
+									<div class="text-right text-primary" style="padding-right: 15px; padding-top: 10px;">{{component.section.entry.length}} Results</div>
+									<ul ng-if="component.section.entry && component.section.entry.length > 0">
+										<li ng-repeat="e in component.section.entry | limitTo:6">
+											{{e.organizer.code.displayName}} - {{e.organizer.component.observation.value.value}} {{e.organizer.component.observation.value.unit}}
+										</li>
+									</ul>
+								</div>
+								<div ng-switch-when="11450-4 ">
+									<div class="no-data" ng-if="!component.section.entry || component.section.entry.length === 0">No Data Available</div>
+									<ul ng-if="component.section.entry && component.section.entry.length > 0">
+										<li ng-repeat="e in component.section.entry">
+											{{e.act.entryRelationship.observation.value.displayName}}
+										</li>
+									</ul>
+								</div>
+								<div ng-switch-when="8716-3 ">
+									<tabset>
+										<tab heading="Height ">
+											<div google-chart chart="chartVitalsHeight"></div>
+											<div class="no-data" ng-if="!chartVitalsHeight">No Data Available</div>
+										</tab>
+										<tab heading="Weight ">
+											<div google-chart chart="chartVitalsWeight"></div>
+											<div class="no-data" ng-if="!chartVitalsWeight">No Data Available</div>
+										</tab>
+										<tab heading="Blood Pressure ">
+											<div google-chart chart="chartVitalsBloodPressure"></div>
+											<div class="no-data" ng-if="!chartVitalsBloodPressure">No Data Available</div>
+										</tab>
+									</tabset>
+								</div>
+								<div ng-switch-when="46240-8 ">
+									<tabset>
+										<tab heading="Height ">
+											<div ng-if="chartHeight" google-chart chart="chartHeight "></div>
+											<div class="no-data" ng-if="!chartHeight">No Data Available</div>
+										</tab>
+										<tab heading="Weight ">
+											<div google-chart chart="chartWeight "></div>
+											<div class="no-data" ng-if="!chartWeight">No Data Available</div>
+										</tab>
+										<tab heading="Pulse ">
+											<div google-chart chart="chartPulse "></div>
+											<div class="no-data" ng-if="!chartPulse">No Data Available</div>
+										</tab>
+										<tab heading="Respiration ">
+											<div google-chart chart="chartRespiration "></div>
+											<div class="no-data" ng-if="!chartRespiration">No Data Available</div>
+										</tab>
+										<tab heading="Blood Pressure ">
+											<div google-chart chart="chartBloodPressure "></div>
+											<div class="no-data" ng-if="!chartBloodPressure">No Data Available</div>
+										</tab>
+									</tabset>
+								</div>
+							</div>
+							<div class="panel-footer ">
+								<button ng-if="component.section.text.table " ng-click="viewMore(component) " class="btn btn-primary ">View More</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

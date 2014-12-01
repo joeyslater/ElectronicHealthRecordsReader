@@ -1,16 +1,14 @@
 <div class="height100" ng-controller="TabsController">
-    <tabset>
+    <tabset class="height100">
         <tab heading="Home">
             <div ng-include src="'main/dashboard/tabs/home/main.tpl.html'"></div>
         </tab>
-        <tab heading="Messages (0)">Potentially Adding a Messaging System</tab>
-
         <tab ng-repeat="tab in tabs">
             <tab-heading>
-                <span>{{tab.title}}</span>
+                <span class="tab-title">{{tab.title}}</span>
                 <span class="close" ng-click="removeTab($index)">&times;</span>
             </tab-heading>
-            <div id="tab" class="height100" ng-include ng-init="newccd = ccd" src="'main/dashboard/tabs/tab/main.tpl.html'" ng-controller="TabController"></div>
+            <div id="tab" class="height100" ng-include ng-init="ccd = tab.ccd; user = tab.user;" src="'main/dashboard/tabs/tab/main.tpl.html'" ng-controller="TabController"></div>
         </tab>
     </tabset>
 </div>

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"appengine"
+	"appengine/blobstore"
 	"appengine/datastore"
 	"bytes"
 	"code.google.com/p/go.crypto/pbkdf2"
@@ -24,54 +25,6 @@ func init() {
 	}
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-
-	var newUser User
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&newUser)
-
-	if err != nil {
-		panic(err)
-	}
-
-	if strings.TrimSpace(newUser.Role) == "" {
-		newUser.Role = "patient"
-	}
-
-	q := datastore.NewQuery("User").Filter("Username =", newUser.Username)
-	var users []User
-	q.GetAll(c, &users)
-
-	if len(users) > 0 {
-		fmt.Fprintf(w, "%s", "Duplicate Users")
-	} else {
-		encryptedPassword := HashPassword(newUser.Password)
-
-		if err != nil {
-			panic(err)
-		}
-
-		newUser.Password = encryptedPassword
-		_, err := datastore.Put(c, datastore.NewIncompleteKey(c, "User", nil), &newUser)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		newUser.Password = nil
-		json_user, err := json.Marshal(newUser)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		w.Write(json_user)
-	}
-}
-
 func Clear(b []byte) {
 	for i := 0; i < len(b); i++ {
 		b[i] = 0
@@ -86,7 +39,7 @@ func HashPassword(password []byte) []byte {
 func Login(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
-	var newUser User
+	var newUser UserWithPassword
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newUser)
 
@@ -95,8 +48,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	q := datastore.NewQuery("User").Filter("Username =", newUser.Username)
-	var users []User
-	q.GetAll(c, &users)
+	var users []UserWithPassword
+	keys, _ := q.GetAll(c, &users)
 
 	if len(users) > 0 {
 		encryptedPassword := HashPassword(newUser.Password)
@@ -106,6 +59,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			newUser = users[0]
 			Clear(newUser.Password)
 			newUser.Password = nil
+			newUser.Id = keys[0].IntID()
 
 			session, _ := store.Get(r, "session")
 			session.Values["username"] = newUser.Username
@@ -120,5 +74,69 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
 	}
+}
 
+func Register(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+
+	var newUser UserWithPassword
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newUser)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if strings.TrimSpace(newUser.Role) == "" {
+		newUser.Role = "patient"
+	}
+
+	q := datastore.NewQuery("User").Filter("Username =", newUser.Username)
+	var users []UserWithPassword
+	q.GetAll(c, &users)
+
+	if len(users) > 0 {
+		fmt.Fprintf(w, "%s", "Duplicate Users")
+	} else {
+		encryptedPassword := HashPassword(newUser.Password)
+
+		if err != nil {
+			panic(err)
+		}
+
+		newUser.Password = encryptedPassword
+		bkey, _ := blobstore.BlobKeyForFile(c, "/assets/images/blank-prof.png")
+		newUser.ProfilePic = bkey
+		newUser.Ccd = bkey
+
+		key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "User", nil), &newUser)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		newUser.Password = nil
+		newUser.Id = key.IntID()
+		json_msg, err := json.Marshal(newUser)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		session, _ := store.Get(r, "session")
+		session.Values["username"] = newUser.Username
+		session.Values["role"] = newUser.Role
+		session.Save(r, w)
+
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "%s", json_msg)
+	}
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session")
+	session.Values["username"] = ""
+	session.Values["role"] = ""
+	session.Save(r, w)
 }

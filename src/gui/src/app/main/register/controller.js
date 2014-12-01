@@ -1,6 +1,7 @@
 //Register Module
-angular.module('medical-guru.main.register', [
-    'ngResource', 'medical-guru.auth'
+angular.module('baymax.register', [
+    'ngResource',
+    'baymax.auth'
 ])
 
 //Service for registering users
@@ -19,7 +20,7 @@ angular.module('medical-guru.main.register', [
 }])
 
 //Controller for registering user
-.controller('RegisterController', function($log, $scope, RegisterService, $http, AuthService, $location) {
+.controller('RegisterController', function($log, $scope, $rootScope, RegisterService, $http, AuthService, AuthEvents, $location) {
 
     //Set defaults 
     $scope.credentials = {
@@ -35,13 +36,9 @@ angular.module('medical-guru.main.register', [
     //checks to see if passwrod is matched with confirm password
     $scope.checkPasswords = function() {
         if ($scope.credentials.confirmPassword !== $scope.credentials.password) {
-            $scope.confirmPasswordError = true;
-            $scope.errors.length = 0;
-            $scope.errors.push(
-                "Password are not equal"
-            );
+            $scope.formErrors.confirmPassword = "Password are not equal";
         } else {
-            $scope.confirmPasswordError = false;
+            $scope.formErrors.confirmPassword = "";
         }
         return !$scope.confirmPasswordError;
     };
@@ -72,34 +69,29 @@ angular.module('medical-guru.main.register', [
             $scope.formErrors.confirmPassword = "Please confirm your password ";
             $("#confirmPassword").focus();
         } else {
-            console.log("Te");
-            // RegisterService.registerUser($scope.credentials)
-            //     .success(function(data) {
-            //         // $scope.user.name = data.name;
-            //         // $scope.user.password = data.password;
-            //         // $scope.user.id = data.id;
-            //         // $scope.user.optionShowCheckedItems = true;
-            //         // Auth.setLoggedInUser($scope.user);
-            //         // $location.path('/');
-            //     })
-            //     .error(function(data, status, headers, config) {
-            //         // if (status === 409) {
-            //         //     $scope.needUserNameError = false;
-            //         //     $scope.needPasswordError = false;
-            //         //     $scope.needConfirmPasswordError = false;
-            //         //     $scope.confirmPasswordError = false;
-            //         //     $scope.duplicateUserError = true;
-            //         // }
-            //     });
+            AuthService.register(credentials).then(
+                function(res) {
+                    $scope.setCurrentUser(res.data);
+                    $rootScope.$broadcast(AuthEvents.loginSuccess);
+                },
+                function() {
+                    $scope.formErrors.firstName = "";
+                    $scope.formErrors.lastName = "";
+                    $scope.formErrors.username = "";
+                    $scope.formErrors.emailAddress = "";
+                    $scope.formErrors.password = "";
+                    $scope.formErrors.confirmPassword = "Please confirm your password ";
+                    $('#username').focus();
+                    $scope.credentials.password = '';
+                    $scope.credentials.confirmPassword = '';
+                    $scope.formError.username = "There was an error creating your account";
+                });
         }
-
     };
 
     var isBlank = function(str) {
         return (!str || /^\s*$/.test(str));
     };
 })
-
-//
 
 ;

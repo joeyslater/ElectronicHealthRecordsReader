@@ -1,0 +1,26 @@
+#header {
+	.navbar {
+		background: #007AB0;
+		color: white;
+		font-weight: bold;
+		line-height: 20px;
+		a {
+			color: white;
+			font-weight: bold;
+			cursor: pointer;
+		}
+		a:hover {
+			background: inherit;
+		}
+		img {
+			height: 50px;
+			width: 50px;
+			padding: 0;
+		}
+		.dropdown-menu {
+			a {
+				color: #111;
+			}
+		}
+	}
+}

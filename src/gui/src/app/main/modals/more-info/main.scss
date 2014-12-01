@@ -1,0 +1,25 @@
+.more-info {
+	.modal-dialog {
+		width: 850px;
+		table {
+			font-size: 12px;
+			margin-bottom: 0;
+			tbody {
+				 border: 0;
+			}
+		}
+		.pagination-holder {
+			text-align: center;
+		}
+		.pagination {
+			margin-bottom: 0;
+			li {
+				cursor: pointer;
+			}
+		}
+
+	}
+	.modal-body {
+		padding: 0px;
+	}
+}

@@ -5,7 +5,6 @@ angular.module('baymax.tabs', [
 
 //Controller for the Dashboard Tabs
 .controller('TabsController', function($scope, $http, $log) {
-
 	var promise = $http.get('/marla');
 	promise.then(function(result) {
 		$scope.ccd = result.data;
@@ -16,7 +15,6 @@ angular.module('baymax.tabs', [
 			ccd: $scope.ccd
 		}];
 	});
-
 
 	$scope.removeTab = function(index) {
 		var tab = $scope.tabs[index];
